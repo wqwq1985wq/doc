@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<!-- saved from url=(0033)https://bfby.gameabc2.com/wss.htm -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+ 
+<script>
+
+var log, sock, sock2, browser;
+
+window.onload = function()
+{
+	browser = window.navigator.userAgent.toLowerCase(); //alert(browser);
+	log = document.getElementById('log');
+	log.innerHTML = 'browser: ' + browser;
+
+}
+
+function conn1()
+{
+	if(parseInt(Math.random()*1000) < 1500)
+		sock = new WebSocket("wss://bfbys1.gameabc2.com/room");
+	else
+		sock = new WebSocket("wss://bfbys6.gameabc2.com/room");
+
+	log.innerHTML += '<br/> sock='+sock;
+
+	sock.onerror = function(msg){
+		log.innerHTML += '<br/>1:'+msg;
+		console.log(msg);
+	};
+	sock.onclose = function(msg){
+		log.innerHTML += '<br/>2:'+msg;
+		console.log(msg);
+	};
+	sock.onopen  = function(msg){
+		log.innerHTML += '<br/>sock1 open';
+		//window.setInterval(function(){ sock.send('{"cmd":"HeartBeat", "a":"ttttttttttttttttttcGGGGGGG111111111oooooopppppppp33333333333333333333", "t":123321}'); }, 8000);
+	};
+
+	sock.onmessage = function(msg){
+		log.innerHTML += '<br/>'+(new Date()).getTime()+' r: '+msg.data;
+	};
+}
+
+function conn2()
+{
+	sock2 = new WebSocket("wss://bfbyg2.gameabc2.com/gate");
+
+	log.innerHTML += '<br/> sock='+sock2;
+
+	sock2.onerror = function(msg){
+		log.innerHTML += '<br/>3:'+msg;
+		console.log(msg);
+	};
+	sock2.onclose = function(msg){
+		log.innerHTML += '<br/>4:'+msg;
+		console.log(msg);
+	};
+	sock2.onopen  = function(msg){
+		log.innerHTML += '<br/>sock2 open';
+		//window.setInterval(function(){ sock2.send('{"cmd":"HeartBeat", "a":"tttttttttttttttttt2222222222222222hhhhhhhhhhhhhhhhhhpppppppppppppppppppppppp3333333333333333", "t":123321}'); }, 8000);
+	};
+
+	sock2.onmessage = function(msg){
+		log.innerHTML += '<br/>'+(new Date()).getTime()+' g: '+msg.data;
+	};
+}
+
+function send1()
+{
+	sock.send('{"cmd":"HeartBeat", "b":"ttttttttttttttttttcGGGGGGGGggggggggggggghhhhhhhhhhhhhhhhhhpppppppppppppppppppppppp11111111111111111", "t":123321}');
+	log.innerHTML += '<br/>'+(new Date()).getTime();
+}
+
+function send2()
+{
+	sock2.send('{"cmd":"HeartBeat", "b":"ttttttttttttttttttttttttcccccccccccccccccchhhhhhhhhhhhuuuuuuuuuuppppppppppppppppppppGGGGGGGGGGGG", "t":123321}');
+	log.innerHTML += '<br/>'+(new Date()).getTime();
+}
+
+</script></head>
+
+
+
+<body><br><br>
+
+<button style="size:32px" onclick="conn1();"> 连接 r1 </button>
+<button style="size:32px" onclick="send1();"> 发送 r1 </button>
+
+<button style="size:32px" onclick="conn2();"> 连接 g1 </button>
+<button style="size:32px" onclick="send2();"> 发送 g1 </button>
+
+<br><br>
+
+
+<div id="log">browser: mozilla/5.0 (windows nt 6.1; wow64) applewebkit/537.36 (khtml, like gecko) chrome/71.0.3578.98 safari/537.36<br> sock=[object WebSocket]<br>sock1 open<br>1545381944605<br>1545381944663 r: {"cmd":"HeartBeat","ret":0,"data":{"t":123321, "svrTime":1545381944662}}<br> sock=[object WebSocket]<br>sock2 open<br>2:[object CloseEvent]<br>4:[object CloseEvent]</div>
+</body></html>
